@@ -1,6 +1,7 @@
 package com.tiantian.dao;
 import com.tiantian.entity.User;
 import com.tiantian.util.DBHelper;
+import com.tiantian.util.PageBeanUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -188,6 +189,84 @@ public class UserDao {
         return user;
     }
 
+    //带参数的分页查询 动态sql
+    // page 页数  limit 条数
+    public List<User> selectByParam(int page,int limit){
+        List<User> lists=new ArrayList<>();
+        //1 创建连接对象
+        Connection conn = DBHelper.getConnection();
+        //2 sql 语句
+        String sql="select * from t_user limit ?,?";
+        //3 获取预编译对象
+        PreparedStatement ps=null;
+        //4 获取结果集
+        ResultSet rs=null;
+        //获取索引
+        PageBeanUtil pageBeanUtil = new PageBeanUtil(page,limit);
+        try {
+            //3 获取预编译对象
+            ps=conn.prepareStatement(sql);
+            ps.setInt(1,pageBeanUtil.getStart());
+            ps.setInt(2,limit);
+            //4 获取结果集
+            rs=ps.executeQuery();
+            //5 遍历结果集 一一获取对象
+            while(rs.next()){
+                User user=new User();
+                user.setId(rs.getInt("id"));
+                user.setCreate_time(rs.getString("create_time"));
+                user.setImg(rs.getString("img"));
+                user.setIs_del(rs.getInt("is_del"));
+                user.setModify_time(rs.getString("modify_time"));
+                user.setPassword(rs.getString("password"));
+                user.setReal_name(rs.getString("real_name"));
+                user.setType(rs.getInt("type"));
+                user.setUsername(rs.getString("username"));
+                lists.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                conn.close(); //关闭连接
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return lists;
+    }
+
+    //查询总条数
+    public int selectcount(){
+        int total=0;
+        //1 连接
+        Connection conn = DBHelper.getConnection();
+        //2 sql
+        String sql="select count(*) total from t_user";
+        //3 获取预编译对象
+        PreparedStatement ps=null;
+        //4 获取结果集
+        ResultSet rs=null;
+        try {
+            //3 获取预编译对象
+            ps=conn.prepareStatement(sql);
+            //4 执行
+            rs=ps.executeQuery();
+            if(rs.next()){
+                 total = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return total;
+    }
+
    //测试是否拿到
     public static void main(String[] args) {
         UserDao dao=new UserDao();
@@ -231,7 +310,16 @@ public class UserDao {
 //        System.out.println("i = " + i);
         
         //登录
-        User abc = dao.login("abc", "123456");
-        System.out.println("abc = " + abc);
+//        User abc = dao.login("abc", "123456");
+//        System.out.println("abc = " + abc);
+        
+        //分页查询的测试
+//        List<User> users = dao.selectByParam(2,5);
+//        System.out.println("users = " + users);
+//        System.out.println("users.size() = " + users.size());
+
+        //查总条数的测试
+        int i=dao.selectcount();
+        System.out.println("i = " + i);
     }
 }
