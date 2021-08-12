@@ -32,10 +32,11 @@ public class UserService {
     }
 
     //带参数的分页查询
-    public Map selectByParam(int page,int limit){
+//    public Map selectByParam(int page,int limit){
+    public Map selectByParam(Map map1){
         UserDao userDao = new UserDao();
-        List<User> users = userDao.selectByParam(page, limit);
-        int i = userDao.selectcount();
+        List<User> users = userDao.selectByParam(map1);
+        int i = userDao.selectcount(map1);
         Map map=new HashMap();
         map.put("code111",200);//返回的数据不符合规范
         map.put("msg111","查询成功");

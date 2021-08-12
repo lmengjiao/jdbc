@@ -1,4 +1,5 @@
 package com.tiantian.dao;
+
 import com.tiantian.entity.User;
 import com.tiantian.util.DBHelper;
 import com.tiantian.util.PageBeanUtil;
@@ -9,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 //Dao层应该是一个接口 接口可以使用aop 目前不用aop 所以可以写成类
 public class UserDao {
@@ -191,23 +193,42 @@ public class UserDao {
 
     //带参数的分页查询 动态sql
     // page 页数  limit 条数
-    public List<User> selectByParam(int page,int limit){
+//    public List<User> selectByParam(int page,int limit){
+    public List<User> selectByParam(Map map){
+        String page= (String) map.get("page");
+        String limit= (String) map.get("limit");
+        String real_name= (String) map.get("real_name");
+        String type= (String) map.get("type");
+        String username= (String) map.get("username");
+
         List<User> lists=new ArrayList<>();
         //1 创建连接对象
         Connection conn = DBHelper.getConnection();
-        //2 sql 语句
-        String sql="select * from t_user limit ?,?";
+        //2 sql 语句 1=1保持恒等
+        String sql="select * from t_user where 1=1";
+
+        if(null!=real_name && real_name.length()>0){
+            sql =sql +" and real_name like '%"+real_name+"%' ";
+        }
+        if(null!=type && type.length()>0){
+            sql =sql +" and type = "+type+"   ";
+        }
+        if(null!=username && username.length()>0){
+            sql =sql +" and username like '%"+username+"%' ";
+        }
+        sql=sql+" limit  ? , ?";
+        System.out.println("da de  sql= " + sql);
         //3 获取预编译对象
         PreparedStatement ps=null;
         //4 获取结果集
         ResultSet rs=null;
         //获取索引
-        PageBeanUtil pageBeanUtil = new PageBeanUtil(page,limit);
+        PageBeanUtil pageBeanUtil = new PageBeanUtil(Integer.parseInt(page),Integer.parseInt(limit));
         try {
             //3 获取预编译对象
             ps=conn.prepareStatement(sql);
             ps.setInt(1,pageBeanUtil.getStart());
-            ps.setInt(2,limit);
+            ps.setInt(2, Integer.parseInt(limit));
             //4 获取结果集
             rs=ps.executeQuery();
             //5 遍历结果集 一一获取对象
@@ -237,12 +258,26 @@ public class UserDao {
     }
 
     //查询总条数
-    public int selectcount(){
+    public int selectcount(Map map1){
+        String real_name= (String) map1.get("real_name");
+        String type= (String) map1.get("type");
+        String username= (String) map1.get("username");
         int total=0;
         //1 连接
         Connection conn = DBHelper.getConnection();
-        //2 sql
-        String sql="select count(*) total from t_user";
+        //2 sql 1=1保持恒等
+        String sql="select count(*) total from t_user where 1=1";
+        if(null!=real_name && real_name.length()>0){
+            sql =sql +" and real_name like '%"+real_name+"%' ";
+        }
+        if(null!=type && type.length()>0){
+            sql =sql +" and type = "+type+"   ";
+        }
+        if(null!=username && username.length()>0){
+            sql =sql +" and username like '%"+username+"%' ";
+        }
+        System.out.println("count  sql= " + sql);
+
         //3 获取预编译对象
         PreparedStatement ps=null;
         //4 获取结果集
@@ -319,7 +354,7 @@ public class UserDao {
 //        System.out.println("users.size() = " + users.size());
 
         //查总条数的测试
-        int i=dao.selectcount();
-        System.out.println("i = " + i);
+//        int i=dao.selectcount();
+//        System.out.println("i = " + i);
     }
 }
