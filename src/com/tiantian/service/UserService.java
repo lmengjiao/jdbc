@@ -50,4 +50,60 @@ public class UserService {
         map2.put("object",map);
         return map2;
     }
+
+    //修改 ajax发送后台
+    public Map updateid(Integer is_del,Integer userId){
+        UserDao dao = new UserDao();
+        int i = dao.updateid(is_del, userId);
+        Map map=new HashMap();
+        if(i==1){
+            map.put("code",0);
+            map.put("msg","修改成功");
+        }else {
+            map.put("code",400);
+            map.put("msg","修改失败");
+        }
+        return map;
+    }
+
+    //修改全部发送后台
+    public Map updateUser(User user){
+        Map codeMap=new HashMap();
+        UserDao dao = new UserDao();
+        int i=dao.updateUser(user);
+        if(i==1){
+            codeMap.put("code",0);
+            codeMap.put("msg","请求成功");
+        }else{
+            codeMap.put("code",400);
+            codeMap.put("msg","请求失败");
+        }
+        return codeMap;
+    }
+
+    //按id查询
+    public Map selectid(Integer id){
+        UserDao dao = new UserDao();
+        User user = dao.selectid(id);
+        Map map=new HashMap();
+        map.put("code",0);
+        map.put("msg","ok");
+        map.put("data",user);
+        return map;
+    }
+
+    //新增 发送后台
+    public Map addUser(User user){
+        UserDao dao = new UserDao();
+        int i = dao.addUser(user);
+        Map map=new HashMap();
+        if(i==1){
+            map.put("code",0);
+            map.put("msg","修改成功");
+        }else {
+            map.put("code",400);
+            map.put("msg","修改失败");
+        }
+        return map;
+    }
 }

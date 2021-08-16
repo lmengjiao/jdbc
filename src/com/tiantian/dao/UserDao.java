@@ -302,6 +302,107 @@ public class UserDao {
         return total;
     }
 
+    //修改 ajax传输后台的东西
+    public int updateid(Integer is_del,Integer userId){
+        //连接
+        Connection conn = DBHelper.getConnection();
+        //sql
+        String sql="update t_user set is_del=? where id=?";
+        //编译
+        PreparedStatement ps=null;
+        //执行
+        int i=0;
+        try {
+            ps=conn.prepareStatement(sql);
+            ps.setInt(1,is_del);
+            ps.setInt(2,userId);
+            i=ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return i;
+    }
+
+    //修改 ajax传输后台的东西
+    public int updateUser(User user){
+        // 连接
+        Connection conn = DBHelper.getConnection();
+        //sql
+        String sql="update t_user set create_time?,img=?,is_del=?,modify_time=?,password=?,real_name=?,type=?,username=? where id=?";
+        //预编译
+        PreparedStatement ps=null;
+        //执行
+        int i=0;
+        try {
+            ps=conn.prepareStatement(sql);
+            ps.setString(1,user.getCreate_time());
+            ps.setString(2,user.getImg());
+            ps.setInt(3,user.getIs_del());
+            ps.setString(4,user.getModify_time());
+            ps.setString(5,user.getPassword());
+            ps.setString(6,user.getUsername());
+            ps.setInt(7,user.getType());
+            ps.setString(8,user.getUsername());
+            ps.setInt(9,user.getId());
+            i=ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return i;
+    }
+
+    //根据id查询
+    public User selectid(Integer id){
+        User user =null;
+        //创建链接
+        Connection conn=DBHelper.getConnection();
+        //创建sql 语句
+        String sql="select * from t_user where id=?";
+        //获取预编译对象
+        PreparedStatement ps=null;
+        //执行预编译对象
+        ResultSet rs=null;
+        try {
+            //获取预编译对象
+            ps=conn.prepareStatement(sql);
+            ps.setInt(1,id);
+            //执行预编译对象
+            rs=ps.executeQuery();
+            if(rs.next()){
+                user=new User();
+                user.setId(rs.getInt("id"));
+                user.setCreate_time(rs.getString("create_time"));
+                user.setImg(rs.getString("img"));
+                user.setIs_del(rs.getInt("is_del"));
+                user.setModify_time(rs.getString("modify_time"));
+                user.setPassword(rs.getString("password"));
+                user.setReal_name(rs.getString("real_name"));
+                user.setType(rs.getInt("type"));
+                user.setUsername(rs.getString("username"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return user;
+    }
    //测试是否拿到
     public static void main(String[] args) {
         UserDao dao=new UserDao();
@@ -356,5 +457,9 @@ public class UserDao {
         //查总条数的测试
 //        int i=dao.selectcount();
 //        System.out.println("i = " + i);
+        
+        //测试修改
+        int i=dao.updateid(2,7);
+        System.out.println("i = " + i);
     }
 }
