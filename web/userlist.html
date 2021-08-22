@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="js/layui-v2.5.6/layui/css/layui.css">
 </head>
 <body>
-<!--我是修改-->
+<!--我是编辑-->
 <script type="text/html" id="updateHtml">
 
     <form class="layui-form layui-form-pane" action=""  onsubmit="return false" lay-filter="myUpdate">
@@ -193,6 +193,7 @@
         var util=layui.util;
         var $=layui.jquery;
         var laydate=layui.laydate;
+        var layer=layui.layer;
 
         table.render({
             elem: '#test'
@@ -277,6 +278,7 @@
             }
 
         });
+
         //头工具栏事件
         table.on('toolbar(test)', function(obj){
             var checkStatus = table.checkStatus(obj.config.id);
@@ -332,7 +334,7 @@
                             , "type": data.type
                             , "is_del": data.is_del
                             , "modify_time": data.modify_time
-                            ,"id":data.id
+                            , "id":data.id
                         });
                         form.render(); //重点强调：当界面 发生改变时，记得 重新渲染模块，不然不显示效果
 
@@ -433,9 +435,9 @@
                         layer.msg("修改成功");
                         table.reload('test',{
                             page:{
-                                curr:1 //重新从第一页开始
+                                curr:1 //从第一页开始
                             }
-                        });//只重载数据
+                        }); //只重载数据
                     }
                 }
             })

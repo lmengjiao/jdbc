@@ -27,6 +27,8 @@ public class UserService {
                 session.setAttribute("user", login);
                 map.put("code", 0);
                 map.put("msg", "登陆成功");
+                //给账户一个前端渲染
+                map.put("username",username);
                 return map;
             }
     }
@@ -105,5 +107,16 @@ public class UserService {
             map.put("msg","修改失败");
         }
         return map;
+    }
+
+    //查询业务员
+    public Map selectByType(){
+        UserDao dao = new UserDao();
+        List<User> users = dao.selectByType();
+        Map codeMap=new HashMap();
+        codeMap.put("code",0);
+        codeMap.put("msg","ok");
+        codeMap.put("data",users);
+        return codeMap;
     }
 }

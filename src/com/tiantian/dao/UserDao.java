@@ -14,15 +14,15 @@ import java.util.Map;
 
 //Dao层应该是一个接口 接口可以使用aop 目前不用aop 所以可以写成类
 public class UserDao {
-    //全查
-    public List<User> selectAll() {
+    //查询所有业务员
+    public List<User> selectByType() {
         //dao层和数据库做连接 用到的知识点叫做jdbc
         //要连接数据库 就需要用到刚刚DbHelper.getConnection()来创建一个和mysql连接的对象
         //1 创建连接对象
         List<User> users=new ArrayList<>();
         Connection conn = DBHelper.getConnection();
         //2 创建sql语句
-        String sql="select * from t_user";
+        String sql="select * from t_user where type=2";
         //3 使用链接 获取预编译对象
         PreparedStatement ps=null;
         ResultSet rs=null; //4执行预编译对象 得出结果集
@@ -191,7 +191,7 @@ public class UserDao {
         return user;
     }
 
-    //带参数的分页查询 动态sql
+    //带参数的分页查询 动态sql  搜索框
     // page 页数  limit 条数
 //    public List<User> selectByParam(int page,int limit){
     public List<User> selectByParam(Map map){

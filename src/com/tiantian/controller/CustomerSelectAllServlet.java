@@ -22,10 +22,29 @@ public class CustomerSelectAllServlet extends HttpServlet {
         resp.setContentType("text/html; charset=UTF-8");
         //2.接收参数
         String page = req.getParameter("page");
+        System.out.println("page = " + page);
         String limit = req.getParameter("limit");
+        System.out.println("limit = " + limit);
+        //搜索框
+        String cust_name = req.getParameter("cust_name");
+        System.out.println("cust_name = " + cust_name);
+        String cust_phone = req.getParameter("cust_phone");
+        System.out.println("cust_phone = " + cust_phone);
+        String cust_sex = req.getParameter("cust_sex");
+        System.out.println("cust_sex = " + cust_sex);
+        String username = req.getParameter("username");
+        System.out.println("username = " + username);
+        String modify_time = req.getParameter("modify_time");
+        System.out.println("modify_name = " + modify_time);
         Map paramMap = new HashMap();
         paramMap.put("page",page);
         paramMap.put("limit",limit);
+        //搜索框
+        paramMap.put("cust_name",cust_name);
+        paramMap.put("cust_phone",cust_phone);
+        paramMap.put("cust_sex",cust_sex);
+        paramMap.put("username",username);
+        paramMap.put("modify_time",modify_time);
 
         CustomerService service = new CustomerService();
         Map map = service.selectAllByParam(paramMap);
